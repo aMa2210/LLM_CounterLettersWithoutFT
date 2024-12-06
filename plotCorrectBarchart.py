@@ -20,7 +20,7 @@ fontsize = 16
 
 plt.figure(figsize=(10, 6))
 modified_keys = [key.replace('_IFCorrect', '') for key in column_sums.keys()]  # 替换模型名称中的 '_IFCorrect'
-modified_values = [(10000-value) / 10000 for value in column_sums.values()]  # 计算百分比
+modified_values = [(10000-value) / 100 for value in column_sums.values()]  # 计算百分比
 
 bars = plt.bar(modified_keys, modified_values)
 
@@ -31,10 +31,10 @@ for bar in bars:
 
 # plt.title('Percentage of Words with Count Errors per Model', fontsize=fontsize)
 plt.xlabel('Model Name', fontsize=fontsize)
-plt.ylabel('Percentage of Words with Count Errors', fontsize=fontsize)
+plt.ylabel('Percentage of Words with Count Errors (%)', fontsize=fontsize)
 plt.xticks(fontsize=fontsize)
 
 plt.ylim(0, 1)
-plt.yticks([i * 0.1 for i in range(11)], fontsize=fontsize)
+plt.yticks([i * 10 for i in range(11)], fontsize=fontsize)
 plt.tight_layout()
 plt.show()
