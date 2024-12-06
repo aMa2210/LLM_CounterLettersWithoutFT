@@ -5,16 +5,15 @@ import os
 import re
 import matplotlib.pyplot as plt
 
+
 def main():
     model_names = ['LlaMa3.1_8B', 'LlaMa3.1_70B', 'LLama3.2_11B', 'mistral_7B',
                    'mixtral-8x7b', 'gemma2-9B', 'gpt4o_mini', 'gpt4o']
     result_files = ['Results/' + result + '.json' for result in model_names]
     validation_file = 'Words/Random_10000_words_letterCount.json'
 
-
     By_mul_occurance(result_files, model_names, validation_file)
     # Byaccuracy(result_files, model_names, validation_file)
-
 
 
 def By_mul_occurance(result_files, model_names, validation_file):
@@ -153,7 +152,6 @@ def Byaccuracy(result_files, model_names, validation_file):
 
         accuracy_data = {}
 
-
         for letter, stats in letter_stats.items():
             if stats["total"] > 0:
                 accuracy = stats["wrong"] / stats["total"]
@@ -185,7 +183,6 @@ def Byaccuracy(result_files, model_names, validation_file):
     plt.ylabel('Percentage of Letters with Count Errors (%)', fontsize=fontsize)
     plt.legend(loc='best', fontsize=fontsize - 6)
     plt.show()
-
 
 
 if __name__ == '__main__':

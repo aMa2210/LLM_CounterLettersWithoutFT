@@ -3,14 +3,18 @@ import matplotlib.pyplot as plt
 from collections import defaultdict
 from collections import Counter
 
-model_names = ['LlaMa3.1-8B_IFCorrect', 'LlaMa3.1-70B_IFCorrect', 'LLama3.2-11B_IFCorrect', 'Mistral-7B_IFCorrect',
-               'Mixtral-8x7b_IFCorrect', 'Gemma2-9B_IFCorrect', 'GPT4o-mini_IFCorrect', 'GPT4o_IFCorrect']
+
+def main():
+    model_names = ['LlaMa3.1-8B_IFCorrect', 'LlaMa3.1-70B_IFCorrect', 'LLama3.2-11B_IFCorrect', 'Mistral-7B_IFCorrect',
+                   'Mixtral-8x7b_IFCorrect', 'Gemma2-9B_IFCorrect', 'GPT4o-mini_IFCorrect', 'GPT4o_IFCorrect']
+    plot_barChart('Word', model_names)
 
 
 def max_letter_count(word):
     letter_counts = Counter(word)
     # return frequency of the most common letter
     return max(letter_counts.values())
+
 
 def plot_barChart(orderColumn, model_names):
     plt.figure(figsize=(18, 6))
@@ -36,13 +40,14 @@ def plot_barChart(orderColumn, model_names):
             grouped_data[first_value] += second_value
             grouped_count[first_value] += 1
 
-        # grouped_data = {key: grouped_data[key] for key in grouped_data if 1 <= key <= 4} # Only retain the data within this range, as the other data samples are too few.
-        # grouped_count = {key: grouped_count[key] for key in grouped_count if 1 <= key <= 4}
+        grouped_data = {key: grouped_data[key] for key in grouped_data if
+                        1 <= key <= 4}  # Only retain the data within this range, as the other data samples are too few.
+        grouped_count = {key: grouped_count[key] for key in grouped_count if 1 <= key <= 4}
 
-        grouped_average = {key: (grouped_data[key] / grouped_count[key])*100 for key in grouped_data}
+        grouped_average = {key: (grouped_data[key] / grouped_count[key]) * 100 for key in grouped_data}
 
-        keys = list(grouped_average.keys())  # 获取分组的键
-        values = list(grouped_average.values())  # 获取每个分组的统计值（即和）
+        keys = list(grouped_average.keys())
+        values = list(grouped_average.values())
 
         # Adjust the positions for each model's bars
         offset = bar_width * idx - (len(model_names) - 1) * bar_width / 2  # Calculate the offset for each model
@@ -52,7 +57,7 @@ def plot_barChart(orderColumn, model_names):
     fontsize = 16
     # plt.xticks(range(3, 15), fontsize=fontsize)
     # plt.xticks(range(1, 8), fontsize=fontsize)
-    plt.xticks(fontsize=fontsize)
+    plt.xticks(range(1, 5), fontsize=fontsize)
     plt.yticks([i * 10 for i in range(11)], fontsize=fontsize)
     plt.xlabel('Letter Multiplicity', fontsize=fontsize)
     plt.ylabel('Percentage of Words with Count Errors (%)', fontsize=fontsize)
@@ -60,5 +65,5 @@ def plot_barChart(orderColumn, model_names):
     plt.show()
 
 
-# plot_barChart('Letters_Number', model_names)
-plot_barChart('Word', model_names)
+if __name__ == '__main__':
+    main()
