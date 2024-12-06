@@ -21,9 +21,9 @@ def main():
                              'count_1w_frequency_tokens_tokenized_by_gpt-4o-mini.csv',
                              'count_1w_frequency_tokens_tokenized_by_gpt-4-mini.csv']
     token_frequency_files = ['Results/token_results/' + file_name for file_name in token_frequency_files]
-    # plot_lineChart_token_num('Word', model_names, token_file_names)
+    plot_lineChart_token_num('Word', model_names, token_file_names)
     # plot_lineChart_letter_several_tokens('Word', model_names, token_file_names)
-    plot_lineChart_token_frequency('Word', model_names, token_file_names, token_frequency_files)
+    # plot_lineChart_token_frequency('Word', model_names, token_file_names, token_frequency_files)
     # print(inter_token_counts('not und el end'))
 
 
