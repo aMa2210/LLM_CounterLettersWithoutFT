@@ -43,7 +43,9 @@ def plot_barChart(orderColumn, model_names):
         grouped_data = {key: grouped_data[key] for key in grouped_data if
                         1 <= key <= 4}  # Only retain the data within this range, as the other data samples are too few.
         grouped_count = {key: grouped_count[key] for key in grouped_count if 1 <= key <= 4}
-
+        print(grouped_data)
+        print(grouped_count)
+        print('********************')
         grouped_average = {key: (grouped_data[key] / grouped_count[key]) * 100 for key in grouped_data}
 
         keys = list(grouped_average.keys())
