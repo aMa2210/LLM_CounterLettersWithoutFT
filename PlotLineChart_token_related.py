@@ -2,6 +2,7 @@ import csv
 import matplotlib.pyplot as plt
 from scipy.stats import spearmanr
 from collections import Counter
+from tqdm import tqdm
 
 # import numpy as np
 def main():
@@ -21,8 +22,8 @@ def main():
                              'count_1w_frequency_tokens_tokenized_by_gpt-4o-mini.csv',
                              'count_1w_frequency_tokens_tokenized_by_gpt-4-mini.csv']
     token_frequency_files = ['Results/token_results/' + file_name for file_name in token_frequency_files]
-    plot_lineChart_token_num('Word', model_names, token_file_names)
-    # plot_lineChart_letter_several_tokens('Word', model_names, token_file_names)
+    # plot_lineChart_token_num('Word', model_names, token_file_names)
+    plot_lineChart_letter_several_tokens('Word', model_names, token_file_names)
     # plot_lineChart_token_frequency('Word', model_names, token_file_names, token_frequency_files)
     # print(inter_token_counts('not und el end'))
 
@@ -78,7 +79,7 @@ def plot_lineChart_token_frequency(orderColumn, model_names, token_file_names, t
         data_toSave = []
         with open(token_file_name, 'r', newline='', encoding='utf-8') as csvfile1:
             reader = csv.DictReader(csvfile1)
-            for row in reader:
+            for row in tqdm(reader):
                 a = count_Token_Average_Frequency(row['Subwords'], token_frequency_file)
                 data_token.append([(row[orderColumn]), a])
                 data_toSave.append([row, a])
@@ -100,7 +101,7 @@ def plot_lineChart_token_frequency(orderColumn, model_names, token_file_names, t
         plt.plot(cumulative_values, label=model_name.replace('_IFCorrect', ''), linewidth=6)
         model_values.append(max(cumulative_values))
     # print(len(cumulative_values))
-    fontsize = 12
+    fontsize = 18
     # plt.xlabel(f'Sorted by {orderColumn}', fontsize=fontsize)
     # plt.xlabel('Words Sorted by Frequency', fontsize=fontsize)
     # plt.xlabel('Words Sorted by Number of Letters', fontsize=fontsize)
@@ -114,7 +115,7 @@ def plot_lineChart_token_frequency(orderColumn, model_names, token_file_names, t
     plt.ylim(0, max(model_values))
     plt.grid(False)
     plt.tick_params(axis='both', direction='in', length=6, width=1)
-    plt.legend(loc='upper left')
+    plt.legend(loc='upper left', fontsize=fontsize)
     plt.show()
 
 
@@ -137,6 +138,8 @@ def inter_token_counts(phrase):
 def plot_lineChart_letter_several_tokens(orderColumn, model_names, token_file_names):
     plt.figure(figsize=(18, 6))
     file_path = 'Results/Random_10000_words.csv'
+
+
     model_values = []
     for model_name, token_file_name in zip(model_names, token_file_names):
         data_correct = []
@@ -161,12 +164,37 @@ def plot_lineChart_letter_several_tokens(orderColumn, model_names, token_file_na
 
         spearman_corr, _ = spearmanr([x[0] for x in data], second_column)
         print(f'Spearman correlation for {model_name}: {spearman_corr}')
-
         cumulative_values = [sum(second_column[:i + 1]) for i in range(len(second_column))]
+        if 'change_indices' not in locals() or not change_indices:
+            change_indices = [0]  # 起始位置
+            for i in range(1, len(data)):
+                # 如果 data 中的关键值（比如 token 数量或其他排序依据）发生变化，就记录索引
+                if data[i][0] != data[i - 1][0]:
+                    change_indices.append(i)
+            change_indices.append(len(data))  # 结束位置
+
         plt.plot(cumulative_values, label=model_name.replace('_IFCorrect', ''), linewidth=6)
         model_values.append(max(cumulative_values))
     # print(len(cumulative_values))
-    fontsize = 12
+    #########################
+    colors = ['#f0f0f0', '#e0e0ff']  # 两种交替颜色
+    for i in range(len(change_indices) - 1):
+        plt.axvspan(change_indices[i], change_indices[i + 1],
+                    facecolor=colors[i % len(colors)], alpha=0.6)
+
+    y_top = max(model_values) * 1.02  # 稍微高于最高曲线
+    last_plotted_idx=0
+    for i in range(len(change_indices) - 1):
+        center_idx = (change_indices[i] + change_indices[i + 1]) // 2
+        if center_idx < len(data) and (center_idx - last_plotted_idx >= 300):
+            plt.text(center_idx, y_top, str(data[center_idx][0]),
+                     rotation=0, va='bottom', ha='center', fontsize=16, color='black')
+        last_plotted_idx = center_idx
+
+    ###########################
+
+
+    fontsize = 18
     # plt.xlabel(f'Sorted by {orderColumn}', fontsize=fontsize)
     # plt.xlabel('Words Sorted by Frequency', fontsize=fontsize)
     # plt.xlabel('Words Sorted by Number of Letters', fontsize=fontsize)
@@ -180,12 +208,30 @@ def plot_lineChart_letter_several_tokens(orderColumn, model_names, token_file_na
     plt.ylim(0, max(model_values))
     plt.grid(False)
     plt.tick_params(axis='both', direction='in', length=6, width=1)
-    plt.legend(loc='upper left')
+    plt.legend(loc='upper left', fontsize=fontsize)
     plt.show()
 
 def plot_lineChart_token_num(orderColumn, model_names, token_file_names):
     plt.figure(figsize=(18, 6))
     file_path = 'Results/Random_10000_words.csv'
+
+    ##################
+    token_transitions = []
+    with open(token_file_names[0], 'r', newline='', encoding='utf-8') as csvfile1:
+        reader = csv.DictReader(csvfile1)
+        for row in reader:
+            token_transitions.append(int(row['Number of Tokens']))
+
+    token_transitions.sort(reverse=True)
+    # 找出 token 数变化点
+    change_indices = [0]
+    for i in range(1, len(token_transitions)):
+        if token_transitions[i] != token_transitions[i - 1]:
+            change_indices.append(i)
+    change_indices.append(len(token_transitions))
+    ######################
+
+
     model_values = []
     for model_name, token_file_name in zip(model_names, token_file_names):
         data_correct = []
@@ -215,7 +261,21 @@ def plot_lineChart_token_num(orderColumn, model_names, token_file_names):
         plt.plot(cumulative_values, label=model_name.replace('_IFCorrect', ''), linewidth=6)
         model_values.append(max(cumulative_values))
     # print(len(cumulative_values))
-    fontsize = 12
+    #########################
+    colors = ['#f0f0f0', '#e0e0ff']  # 两种交替颜色
+    for i in range(len(change_indices) - 1):
+        plt.axvspan(change_indices[i], change_indices[i + 1],
+                    facecolor=colors[i % len(colors)], alpha=0.6)
+    y_top = max(model_values) * 1.02  # 稍微高于最高曲线
+    last_plotted_idx=0
+    for i in range(len(change_indices) - 1):
+        center_idx = (change_indices[i] + change_indices[i + 1]) // 2
+        if center_idx < len(data) and (center_idx - last_plotted_idx >= 300):
+            plt.text(center_idx, y_top, str(data[center_idx][0]),
+                     rotation=0, va='bottom', ha='center', fontsize=16, color='black')
+            last_plotted_idx = center_idx
+    ###########################
+    fontsize = 18
     # plt.xlabel(f'Sorted by {orderColumn}', fontsize=fontsize)
     # plt.xlabel('Words Sorted by Frequency', fontsize=fontsize)
     # plt.xlabel('Words Sorted by Number of Letters', fontsize=fontsize)
@@ -229,7 +289,7 @@ def plot_lineChart_token_num(orderColumn, model_names, token_file_names):
     plt.ylim(0, max(model_values))
     plt.grid(False)
     plt.tick_params(axis='both', direction='in', length=6, width=1)
-    plt.legend(loc='upper left')
+    plt.legend(loc='upper left', fontsize=fontsize)
     plt.show()
 
 

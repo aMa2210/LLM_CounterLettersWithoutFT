@@ -103,14 +103,14 @@ def plot_barChart(orderColumn, model_names, model_names_json):
         plt.bar([key + offset for key in keys], values, width=bar_width, label=model_name)
     # for key, value in sorted(grouped_count.items()):
     #     print(f'{key}: {value}')
-    fontsize = 16
+    fontsize = 20
     # plt.xticks(range(3, 15), fontsize=fontsize)
     # plt.xticks(range(1, 8), fontsize=fontsize)
     plt.xticks(range(1, 5), fontsize=fontsize)
     plt.yticks([i * 10 for i in range(11)], fontsize=fontsize)
     plt.xlabel('Letter Multiplicity', fontsize=fontsize)
     plt.ylabel('Percentage of Letters with Count Errors (%)', fontsize=fontsize)
-    plt.legend(loc='upper left', fontsize=fontsize)
+    plt.legend(loc='upper left', fontsize=fontsize-2)
     plt.show()
 
 

@@ -16,7 +16,7 @@ with open('Results/Random_10000_words.csv', mode='r', newline='', encoding='utf-
             except ValueError:
                 raise ValueError(f"Invalid value encountered for {name}")
 
-fontsize = 16
+fontsize = 20
 
 plt.figure(figsize=(10, 6))
 modified_keys = [key.replace('_IFCorrect', '') for key in column_sums.keys()]  # 替换模型名称中的 '_IFCorrect'

@@ -7,7 +7,7 @@ model_names = [name.replace('_IFCorrect', '') for name in model_names]
 
 a = [514/9955,79/10000,670/9990,1348/9952,2765/9933,922/9982,187/9983,20/9976]
 a = [i*100 for i in a]
-fontsize = 16
+fontsize = 20
 
 plt.figure(figsize=(10, 6))
 

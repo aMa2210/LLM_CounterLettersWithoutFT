@@ -152,7 +152,7 @@ def plot_barChart_letter_several_tokens(orderColumn, model_names, token_file_nam
     # 绘制 Multi token 的所有柱子
     plt.bar(x + bar_width / 2, values_history[:, 1], width=bar_width, label='Different tokens', color=color_B)
 
-    fontsize = 16
+    fontsize = 18
     # plt.xticks(range(3, 15), fontsize=fontsize)
     # plt.xticks(range(1, 8), fontsize=fontsize)
     plt.xticks(range(0, 8),x_labels, fontsize=fontsize)

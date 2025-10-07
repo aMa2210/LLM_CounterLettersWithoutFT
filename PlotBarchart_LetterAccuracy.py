@@ -12,8 +12,8 @@ def main():
     result_files = ['Results/' + result + '.json' for result in model_names]
     validation_file = 'Words/Random_10000_words_letterCount.json'
 
-    By_mul_occurance(result_files, model_names, validation_file)
-    # Byaccuracy(result_files, model_names, validation_file)
+    # By_mul_occurance(result_files, model_names, validation_file)
+    Byaccuracy(result_files, model_names, validation_file)
 
 
 def By_mul_occurance(result_files, model_names, validation_file):
@@ -175,13 +175,13 @@ def Byaccuracy(result_files, model_names, validation_file):
         num_correct = 0
         letter_stats = {letter: {"wrong": 0, "total": 0} for letter in string.ascii_lowercase}
 
-    fontsize = 16
+    fontsize = 22
     plt.xlim(-0.5, len(sorted_accuracy_data) - 0.5)
     plt.xticks([x - 0.37 for x in x_positions_for_bars], sorted_accuracy_data.keys(), fontsize=fontsize)
     plt.yticks([i * 10 for i in range(5)], fontsize=fontsize)
     plt.xlabel('Letters Sorted by Frequency', fontsize=fontsize)
     plt.ylabel('Percentage of Letters with Count Errors (%)', fontsize=fontsize)
-    plt.legend(loc='best', fontsize=fontsize - 6)
+    plt.legend(loc='best', fontsize=fontsize - 8)
     plt.show()
 
 

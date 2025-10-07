@@ -156,7 +156,7 @@ def plotResults(model_names, model_names_json):
             labels_set = True
 
     # 添加标签和标题
-    fontsize = 14
+    fontsize = 18
     ax.set_xlabel('Model', fontsize=fontsize)
     ax.set_ylabel('Letter', fontsize=fontsize)
     # ax.set_title('Error Rates by Model')
